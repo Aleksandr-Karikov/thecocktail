@@ -4,11 +4,12 @@ import { useParams } from 'react-router-dom';
 import { DrinkCard, isCocktailCode } from 'src/entities/drink';
 import { NotFound } from 'src/widgets/not-found';
 import { drinkStore } from 'src/entities/drink';
+import { Tab, Tabs } from 'src/shared/ui/tabs';
 export function CocktailPageObserver() {
     const { code } = useParams();
 
     const isCorrectCode = !code || !isCocktailCode(code);
-    const { drinks: drinksMap, isLoading, error, selectedDrink } = drinkStore;
+    const { drinks: drinksMap, isLoading, error, selectedDrinkId } = drinkStore;
 
     useEffect(() => {
         if (isCorrectCode) {
@@ -26,21 +27,29 @@ export function CocktailPageObserver() {
     if (isLoading) {
         return <div>Загрузка</div>;
     }
+    if (error) {
+        return <div>Ошибка</div>;
+    }
     const selectedDrinks = drinksMap.get(code);
     return (
         <div>
             <div>
-                {selectedDrinks?.length &&
-                    selectedDrinks.map((drink) => (
-                        <button
-                            key={drink.idDrink}
-                            onClick={() => drinkStore.setSelectedDrink(drink)}
-                        >
-                            {drink.strDrink}
-                        </button>
-                    ))}
+                <Tabs
+                    selectedTab={selectedDrinkId}
+                    onChangeTab={(tab) => drinkStore.setSelectedDrinkId(tab)}
+                >
+                    {selectedDrinks?.length &&
+                        selectedDrinks.map((drink) => (
+                            <Tab
+                                key={drink.idDrink}
+                                value={drink.idDrink}
+                                label={drink.strDrink}
+                            >
+                                <DrinkCard drink={drink} />
+                            </Tab>
+                        ))}
+                </Tabs>
             </div>
-            {selectedDrink && !error && <DrinkCard drink={selectedDrink} />}
         </div>
     );
 }

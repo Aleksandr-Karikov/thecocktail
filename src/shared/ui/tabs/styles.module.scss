@@ -1,0 +1,28 @@
+.tabs {
+    display: flex;
+    flex-direction: column;
+}
+
+.tabList {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    overflow-x: auto;
+}
+
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+
+    &.active {
+        border-bottom: 2px solid #3498db;
+        font-weight: bold;
+        background-color: #fff;
+    }
+}

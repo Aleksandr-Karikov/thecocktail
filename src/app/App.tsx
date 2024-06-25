@@ -1,4 +1,4 @@
-import 'src/app/styles/index.css';
+import 'src/app/styles/index.scss';
 import { AppRouterProvider } from './providers/AppRouterProvider';
 
 function App() {

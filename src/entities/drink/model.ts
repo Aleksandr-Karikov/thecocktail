@@ -11,7 +11,7 @@ class Cocktail {
     drinks: Map<CocktailCode, Drink[]>;
     error?: string;
     isLoading = false;
-    selectedDrink?: Drink;
+    selectedDrinkId?: string;
 
     constructor() {
         makeAutoObservable(this);
@@ -22,12 +22,23 @@ class Cocktail {
         const ignoreCache = options?.ignoreCache ?? false;
         const setSelected = options?.setSelected ?? false;
 
+        const updateSelected = (drinks: Drink[]) => {
+            // Задаем выбранный элемент
+            if (drinks.length > 0) {
+                this.setSelectedDrinkId(drinks[0].idDrink);
+            }
+        };
+
         if (this.drinks.has(code) && !ignoreCache) {
-            return this.drinks.get(code);
+            const drinks = this.drinks.get(code) ?? [];
+            if (setSelected) {
+                updateSelected(drinks);
+            }
+            return drinks;
         }
+
         // сбрасываем ошибку
         this.setError();
-
         this.setIsLoading(true);
         const response = await getDrinksByCocktailCode(code);
         this.setIsLoading(false);
@@ -37,10 +48,8 @@ class Cocktail {
         } else {
             const drinks = response.data?.drinks ?? [];
             this.setDrinks(code, drinks);
-
-            // Задаем выбранный элемент
-            if (setSelected && drinks.length > 0) {
-                this.setSelectedDrink(drinks[0]);
+            if (setSelected) {
+                updateSelected(drinks);
             }
         }
     }
@@ -53,8 +62,8 @@ class Cocktail {
     setError(error?: string) {
         this.error = error;
     }
-    setSelectedDrink(drink?: Drink) {
-        this.selectedDrink = drink;
+    setSelectedDrinkId(id?: string) {
+        this.selectedDrinkId = id;
     }
 }
 
