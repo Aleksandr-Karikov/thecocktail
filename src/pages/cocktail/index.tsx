@@ -15,11 +15,7 @@ export function CocktailPageObserver() {
             return;
         }
         void drinkStore.fetchDrinks(code, {
-            onSuccess: (drinks) => {
-                if (drinks.length) {
-                    drinkStore.setSelectedDrink(drinks[0]);
-                }
-            },
+            setSelected: true,
         });
     }, [code, isCorrectCode]);
 

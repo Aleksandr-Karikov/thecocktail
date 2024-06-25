@@ -3,8 +3,8 @@ import { getDrinksByCocktailCode } from './api';
 import { CocktailCode, Drink } from './types';
 
 interface FetchDrinksOptions {
-    onSuccess?: (drinks: Drink[]) => void;
     ignoreCache?: boolean;
+    setSelected?: boolean;
 }
 
 class Cocktail {
@@ -20,20 +20,28 @@ class Cocktail {
 
     async fetchDrinks(code: CocktailCode, options?: FetchDrinksOptions) {
         const ignoreCache = options?.ignoreCache ?? false;
+        const setSelected = options?.setSelected ?? false;
 
         if (this.drinks.has(code) && !ignoreCache) {
             return this.drinks.get(code);
         }
+        // сбрасываем ошибку
+        this.setError();
+
         this.setIsLoading(true);
         const response = await getDrinksByCocktailCode(code);
         this.setIsLoading(false);
+
         if (response.error) {
             this.setError(response.error);
         } else {
             const drinks = response.data?.drinks ?? [];
-            options?.onSuccess?.(drinks);
             this.setDrinks(code, drinks);
-            this.setError();
+
+            // Задаем выбранный элемент
+            if (setSelected && drinks.length > 0) {
+                this.setSelectedDrink(drinks[0]);
+            }
         }
     }
     setDrinks(code: CocktailCode, drinks: Drink[]) {
