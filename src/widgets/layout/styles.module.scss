@@ -1,0 +1,15 @@
+.layout {
+    display: flex;
+    min-height: 100vh;
+    min-width: 100vw;
+}
+$sidebar-width: 200px;
+
+.sidebar {
+    min-width: $sidebar-width;
+}
+
+.content {
+    width: calc(100% - $sidebar-width);
+    overflow-y: auto;
+}

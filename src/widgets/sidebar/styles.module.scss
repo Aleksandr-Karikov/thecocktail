@@ -1,0 +1,21 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    background: blue;
+}
+@mixin active-element {
+    background-color: blueviolet;
+}
+
+.sidebarItem {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    &:hover {
+        @include active-element;
+    }
+    &.active {
+        @include active-element;
+    }
+}

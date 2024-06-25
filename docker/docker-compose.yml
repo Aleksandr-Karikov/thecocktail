@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+    frontend:
+        build:
+            context: ./
+        volumes:
+            - ../:/usr/src/app
+        ports:
+            - '3002:3002'
+        environment:
+            - NODE_ENV=development
+            - PORT=3002
+            - HOST=0.0.0.0
+            - VITE_API_URL=https://www.thecocktaildb.com
