@@ -8,6 +8,24 @@ interface GetRecipeResponse {
     drinks: Drink[];
 }
 
+const mapResponseToDrink = (drinks: Record<string, string>[]) => {
+    const ingredientKey = 'strIngredient';
+    const measureKey = 'strMeasure';
+
+    return drinks.map((drink) => {
+        const ingredients: Ingredient[] = [];
+        for (const [key, value] of Object.entries(drink)) {
+            if (value && key.startsWith(ingredientKey)) {
+                const [, index] = key.split(ingredientKey);
+                const measureIndexKey = `${measureKey}${index}`;
+                const measure = drink[measureIndexKey];
+                ingredients.push({ name: value, measure });
+            }
+        }
+        return { ...drink, ingredients } as Drink;
+    });
+};
+
 export async function getDrinksByCocktailCode(
     code: CocktailCode
 ): Promise<ApiResponse<GetRecipeResponse>> {
@@ -18,20 +36,8 @@ export async function getDrinksByCocktailCode(
                 params: { s: code },
             }
         );
-        const drinks = response.data.drinks.map((drink) => {
-            const ingredients: Ingredient[] = [];
-            for (const [key, value] of Object.entries(drink)) {
-                if (value && key.startsWith('strIngredient')) {
-                    const [, index] = key.split('strIngredient');
-                    const measureKey = `strMeasure${index}`;
-                    const measure = drink[measureKey];
-                    ingredients.push({ name: value, measure });
-                }
-            }
-            return { ...drink, ingredients } as Drink;
-        });
-        console.log(drinks);
-        return { data: { drinks } };
+
+        return { data: { drinks: mapResponseToDrink(response.data.drinks) } };
     } catch (e) {
         if (e instanceof AxiosError) {
             return { error: e.message };

@@ -31,4 +31,5 @@ export interface Drink {
     strImageAttribution: string | null;
     strCreativeCommonsConfirmed: string;
     dateModified: string;
+    strDrinkThumb: string;
 }

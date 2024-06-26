@@ -1,13 +1,17 @@
+import { useLazy } from 'src/shared/hooks/useLazy';
 import { Drink } from '../types';
 import cls from './styles.module.scss';
+import { clsx } from 'clsx';
 
 interface DrinkCardProps {
     drink: Drink;
+    className?: string;
 }
 
-export function DrinkCard({ drink }: DrinkCardProps) {
+export function DrinkCard({ drink, className }: DrinkCardProps) {
+    const ref = useLazy(drink.strDrinkThumb);
     return (
-        <div className={cls.card}>
+        <div className={clsx(cls.card, className)}>
             <div className={cls.cardItem}>
                 <div>
                     <p>{drink.strCategory}</p>
@@ -29,7 +33,9 @@ export function DrinkCard({ drink }: DrinkCardProps) {
                     })}
                 </div>
             </div>
-            <div className={cls.cardItem}></div>
+            <div className={cls.cardItem}>
+                <img className={cls.image} ref={ref} alt="drink" />
+            </div>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import { DrinkCard, isCocktailCode } from 'src/entities/drink';
 import { NotFound } from 'src/widgets/not-found';
 import { drinkStore } from 'src/entities/drink';
 import { Tab, Tabs } from 'src/shared/ui/tabs';
+import cls from './styles.module.scss';
 export function CocktailPageObserver() {
     const { code } = useParams();
 
@@ -32,25 +33,23 @@ export function CocktailPageObserver() {
     }
     const selectedDrinks = drinksMap.get(code);
     return (
-        <div>
-            <div>
-                <Tabs
-                    selectedTab={selectedDrinkId}
-                    onChangeTab={(tab) => drinkStore.setSelectedDrinkId(tab)}
-                >
-                    {selectedDrinks?.length &&
-                        selectedDrinks.map((drink) => (
-                            <Tab
-                                key={drink.idDrink}
-                                value={drink.idDrink}
-                                label={drink.strDrink}
-                            >
-                                <DrinkCard drink={drink} />
-                            </Tab>
-                        ))}
-                </Tabs>
-            </div>
-        </div>
+        <Tabs
+            selectedTab={selectedDrinkId}
+            onChangeTab={(tab) => drinkStore.setSelectedDrinkId(tab)}
+        >
+            {selectedDrinks?.length &&
+                selectedDrinks.map((drink) => (
+                    <Tab
+                        key={drink.idDrink}
+                        value={drink.idDrink}
+                        label={drink.strDrink}
+                    >
+                        <div className={cls.cardWrapper}>
+                            <DrinkCard className={cls.card} drink={drink} />
+                        </div>
+                    </Tab>
+                ))}
+        </Tabs>
     );
 }
 
